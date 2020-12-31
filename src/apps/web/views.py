@@ -74,7 +74,7 @@ def registration(request):
                 'token': user_hash,
             })
             to_email = form.cleaned_data.get('email')
-            send_mail(mail_subject, message, 'prisonere@mail.ru', [to_email])
+            send_mail(mail_subject, message, '', [to_email])
             messages.add_message(
                 request,
                 messages.INFO,
