@@ -1,14 +1,16 @@
-<nav class="navbar navbar-light bg-light">
-    <a href="/"><span class="navbar-brand mb-0 h1">NaaHabr</span></a>
-    {% if user.is_authenticated %}
-        <a class="nav-link" href="/profile">Profile<span class="sr-only">(current)</span></a>
-    {% endif %}
-    <div class="form-inline my-2 my-lg-0">
-    {% if user.is_authenticated %}
-        <a href="/logout" class="btn btn-danger my-2 my-sm-0">Log Out</a>
-    {% else %}
-        <a href="/auth" class="btn btn-info my-2 my-sm-0">Log In</a>
-        <a href="/registration" class="btn btn-info my-2 my-sm-0 ml-2">Registration</a>
-    {% endif %}
+<nav class="navbar">
+    <div class="container">
+        <a href="/"><span class="navbar-brand mb-0 h1">NaaHabr</span></a>
+        {% if user.is_authenticated %}
+            <a class="navbar-toggler" href="/profile">Profile<span class="sr-only">(current)</span></a>
+        {% endif %}
+        <div class="form-inline my-2 my-lg-0">
+        {% if user.is_authenticated %}
+            <a href="/logout" class="btn btn-danger my-2 my-sm-0">Log Out</a>
+        {% else %}
+            <a href="/auth" class="btn btn-outline-primary my-2 my-sm-0">Log In</a>
+            <a href="/registration" class="btn btn-primary-head my-2 my-sm-0 ml-2">Registration</a>
+        {% endif %}
+        </div>
     </div>
 </nav>

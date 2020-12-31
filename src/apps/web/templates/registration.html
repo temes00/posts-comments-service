@@ -2,23 +2,56 @@
 {% load static %}
 
 {% block css %}
-
+    <link rel="stylesheet" type="text/css" href="{% static 'css/web/registration.css' %}">
 {% endblock %}
 {% block js %}
 
 {% endblock %}
 
 {% block page %}
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <form action="/registration" method="POST">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit">
-    </form>
+    <div class="parent">
+        <div class="reg-block">
+            <h1>Registration:</h1>
+            <form action="/registration" method="POST" class="form">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Username</label>
+                    <input type="text" name={{form.username.name}} class="form-control" id="{{form.username.id_for_label}}" placeholder="Enter username">
+                    {{ form.username.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    <input type="email" name={{form.email.name}} class="form-control" id="{{form.email.id_for_label}}" placeholder="Enter email">
+                    {{ form.email.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">First name</label>
+                    <input type="text" name={{form.first_name.name}} class="form-control" id="{{form.first_name.id_for_label}}" placeholder="Enter your first name">
+                    {{ form.first_name.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">Last name</label>
+                    <input type="text" name={{form.last_name.name}} class="form-control" id="{{form.last_name.id_for_label}}" placeholder="Enter your last name">
+                    {{ form.last_name.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    <input type="password" name={{form.password.name}} class="form-control" id="{{form.password.id_for_label}}" placeholder="Password">
+                    {{ form.password.errors }}
+                </div>
+                <button type="submit" class="btn btn-primary" name="go">Submit</button>
+            </form>
+        </div>
+        <div class="auth-block">
+            <span>Already registered? <a href="/auth">Log In!</a></span>
+        </div>
+    </div>
 {% endblock %}

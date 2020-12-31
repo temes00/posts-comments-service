@@ -1,0 +1,64 @@
+.parent {
+    margin: 0 auto;
+    max-width: 460px;
+    margin-top: 80px;
+}
+
+@media (max-width: 600px) {
+    .parent {
+        margin-top: 0;
+    }
+    .container {
+        padding: 0;
+    }
+}
+
+.auth-block {
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.reg-block {
+    text-align: center;
+    margin-top: 1rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    border-radius: 0%;
+}
+
+.form {
+    padding-top: 57px;
+}
+
+.btn-primary {
+    background-color: #558cb7;
+    color: #fff;
+    width: 100%;
+    padding: 0;
+    height: 48px;
+    margin-top: 1rem;
+}
+
+.password-recovery-link {
+    display: block;
+    margin-top: 1rem;
+}
+
+label {
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-size: 22px;
+    line-height: 18px;
+    font-weight: 500;
+}
