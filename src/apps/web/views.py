@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -37,7 +38,11 @@ def auth(request):
                 login(request, user)
                 return redirect('root')
             else:
-                return HttpResponse('Data is invalid!')
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    'Data invalid!'
+                )
     else:
         form = AuthForm()
     return render(request, 'auth.html', {'form': form})
@@ -47,39 +52,56 @@ def registration(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data.get('username'),
-                email=form.cleaned_data.get('email'),
-                password=form.cleaned_data.get('password'),
-                first_name=form.cleaned_data.get('first_name'),
-                last_name=form.cleaned_data.get('last_name'),
-                is_active=False,
-            )
-            messages.add_message(
-                request,
-                messages.INFO,
-                'Registration completed successfully.'
-            )
-            user_hash = generate_user_auth_hash(
-                user_id=user.pk,
-                user_name=user.username,
-            )
-            current_site = get_current_site(request)
-            mail_subject = 'Activate your account.'
-            message = render_to_string('mails/confirm_email.html', {
-                'first_name': f'{user.first_name}',
-                'last_name': f'{user.last_name}',
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': user_hash,
-            })
-            to_email = form.cleaned_data.get('email')
-            send_mail(mail_subject, message, '', [to_email])
-            messages.add_message(
-                request,
-                messages.INFO,
-                'We have sent you a confirmation email.'
-            )
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            check_user = User.objects.filter(
+                Q(username=username) | Q(email=email)
+            ).first
+            if check_user is None:
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=form.cleaned_data.get('password'),
+                    first_name=form.cleaned_data.get('first_name'),
+                    last_name=form.cleaned_data.get('last_name'),
+                    is_active=False,
+                )
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    'Registration completed successfully.'
+                )
+                user_hash = generate_user_auth_hash(
+                    user_id=user.pk,
+                    user_name=user.username,
+                )
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your account.'
+                message = render_to_string('mails/confirm_email.html', {
+                    'first_name': f'{user.first_name}',
+                    'last_name': f'{user.last_name}',
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': user_hash,
+                })
+                to_email = form.cleaned_data.get('email')
+                send_mail(
+                    mail_subject,
+                    message,
+                    '',
+                    [to_email]
+                )
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    'We have sent you a confirmation email.'
+                )
+            else:
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    'User already exists.',
+                )
     else:
         form = RegistrationForm()
     return render(request, 'registration.html', {'form': form})
